@@ -1,0 +1,71 @@
+嗯... 谷歌翻译的加密 相对于 有道翻译 的加密就相对高级了点
+
+不过.. 也就是高级了点...
+
+解密的方式
+
+    1. 谷歌会在加载的过程中请求一个叫 http://translate.google.cn/?ie=GBK 的网址, 已保存在同目录下的 "谷歌翻译 某文档.html"
+        然后里面会定义一个叫做 TKK 的变量, 如下:
+
+            第 977 行: TKK = eval('((function(){var a\x3d251394996;var b\x3d3532267575;return 407959+\x27.\x27+(a+b)})())');
+
+        这个 TKK 每次请求的都不一样, 尚不清楚其有效期是多长时间...
+
+    2. 在每次发送翻译请求时, 都会对 http://translate.google.cn/translate_a/single 发送 get 请求
+        请求参数的 tk 就是加密的字符串
+
+        其由函数 Er(a) 生成, 相关代码如下 (同目录 "谷歌翻译 desktop_module_main.js"), 参数为要进行翻译的句子
+
+            第 5968 行 - 第 6013 行
+
+            var Br = function(a) {
+                    return function() {
+                        return a
+                    }
+                },
+                Cr = function(a, b) {
+                    for (var c = 0; c < b.length - 2; c += 3) {
+                        var d = b.charAt(c + 2),
+                            d = "a" <= d ? d.charCodeAt(0) - 87 : Number(d),
+                            d = "+" == b.charAt(c + 1) ? a >>> d : a << d;
+                        a = "+" == b.charAt(c) ? a + d & 4294967295 : a ^ d
+                    }
+                    return a
+                },
+                Dr = null,
+                Er = function(a) {
+                    var b;
+                    if (null !== Dr) b = Dr;
+                    else {
+                        b = Br(String.fromCharCode(84));
+                        var c = Br(String.fromCharCode(75));
+                        b = [b(), b()];
+                        b[1] = c();
+                        b = (Dr = window[b.join(c())] || "") || ""
+                    }
+                    var d = Br(String.fromCharCode(116)),
+                        c = Br(String.fromCharCode(107)),
+                        d = [d(), d()];
+                    d[1] = c();
+                    c = "&" + d.join("") +
+                        "=";
+                    d = b.split(".");
+                    b = Number(d[0]) || 0;
+                    for (var e = [], f = 0, g = 0; g < a.length; g++) {
+                        var l = a.charCodeAt(g);
+                        128 > l ? e[f++] = l : (2048 > l ? e[f++] = l >> 6 | 192 : (55296 == (l & 64512) && g + 1 < a.length && 56320 == (a.charCodeAt(g + 1) & 64512) ? (l = 65536 + ((l & 1023) << 10) + (a.charCodeAt(++g) & 1023), e[f++] = l >> 18 | 240, e[f++] = l >> 12 & 63 | 128) : e[f++] = l >> 12 | 224, e[f++] = l >> 6 & 63 | 128), e[f++] = l & 63 | 128)
+                    }
+                    a = b;
+                    for (f = 0; f < e.length; f++) a += e[f], a = Cr(a, "+-a^+6");
+                    a = Cr(a, "+-3^+b+-f");
+                    a ^= Number(d[1]) || 0;
+                    0 > a && (a = (a & 2147483647) + 2147483648);
+                    a %= 1E6;
+                    return c + (a.toString() + "." +
+                        (a ^ b))
+                };
+
+        需要注意的是其中 b = (Dr = window[b.join(c())] || "") || "" 一句, 其中 b.join(c() 就是 "TKK" → 鬼知道是怎么生成的
+        此句中, b 不能最终为 "", 否则结果必然是 403
+
+        之后正常, 函数输出为类似于 "&tk=310015.164712" 的东西, 直接将其添加到 GET 请求里即可
