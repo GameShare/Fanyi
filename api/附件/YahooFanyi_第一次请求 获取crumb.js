@@ -15,7 +15,6 @@ var yahoo = function(src, callback){
         "p" : src,
         "ieid" : "ja",
         "oeid" : "zh",
-        "_crumb" :　"LszhQXbmGoQafpTC0pRTJJHzrEZyHupnpSAJFT9lfMRUuzKjWN_X2ddRMWlm1p_FWiVjgE2OYrCWNSxbI2BTKe_53lcSgA--",
         "results" : "1000",
         "formality" : "0",
         "output" : "json"
@@ -28,24 +27,33 @@ var yahoo = function(src, callback){
         'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8'
     }
 
-    request.post("http://honyaku.yahoo.co.jp/TranslationText")
-        .set(HTTPHeaders)
-        .send(postData)
+    request.get("http://honyaku.yahoo.co.jp/")
         .end(function(err, data){
-            if(err) return callback(err);
-            
-            var yhJson = JSON.parse(data.text)
 
-            var text = "";
+            var $ = cheerio.load(data.text);
+            postData._crumb = $("#TTcrumb").val();
 
-            if(yhJson.ResultSet.ResultText && yhJson.ResultSet.ResultText.Results){
-                yhJson.ResultSet.ResultText.Results.forEach(function(item, index){
-                    text += item.TranslatedText;
+            console.log("Yahoo 翻译的_crumb是 ： " + $("#TTcrumb").val())
+
+            request.post("http://honyaku.yahoo.co.jp/TranslationText")
+                .set(HTTPHeaders)
+                .send(postData)
+                .end(function(err, data){
+                    if(err) return callback(err);
+                    
+                    var yhJson = JSON.parse(data.text)
+
+                    var text = "";
+
+                    if(yhJson.ResultSet.ResultText && yhJson.ResultSet.ResultText.Results){
+                        yhJson.ResultSet.ResultText.Results.forEach(function(item, index){
+                            text += item.TranslatedText;
+                        })
+                        callback(null, text)
+                    } else {
+                        callback(new Error("雅虎翻译翻译失败!"))
+                    }
                 })
-                callback(null, text)
-            } else {
-                callback(new Error("雅虎翻译翻译失败!"))
-            }
         })
 }
 
