@@ -10,7 +10,9 @@ var youdao = require("./api/YoudaoFanyi.js")
 var google = require("./api/googleFanyi.js")
 var yahoo = require("./api/YahooFanyi.js")
 
-var words = "主人公。唯一の身寄りである祖母を亡くして、天涯孤独の身。行くあてもなく困っていたところに現れた風莉に拾われ、女子校に通うことになる。男の子だが、女装してスカートを穿くと胸を盛ったりしなくても全く違和感がない。その美少女っぷりは正体を隠すのには好都合だが、本人的には納得がいかないでいる。"
+var googleThroughEn = require("./api/googleFanyi_throughEn.js")
+
+var words = "主人公『大蔵遊星(おおくらゆうせい)』は、日本の財界を代表する“華麗なる一族”大蔵家の末端に、望まれぬ子として生を受けた。　優秀な親族や家庭教師のもとで厳しく育てられた遊星は、多芸に秀でた万能家であったが、いうなれば籠の中の鳥であり、およそ人並みの夢や希望などとは無縁の生涯だった。"
 
 getTranslation(words)
 
@@ -46,5 +48,10 @@ function getTranslation(words){
     yahoo(words, function(err, data){
         if(err) throw err;  // yahoo
         console.log("Yahoo : " + data);
+    })
+
+    googleThroughEn(words, function(err, data){
+        if(err) throw err;  // yahoo
+        console.log("GoogleThroughEn : " + data);
     })
 }

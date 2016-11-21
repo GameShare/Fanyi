@@ -37,7 +37,7 @@ var bing = function(src, callback){
     }
 
     // 以下 Cookie 值是 Bing 翻译所必要的，获取方式为 请求 http://www.bing.com/translator/ 从响应头的 set-cookie 中可以拿到
-    HTTPHeaders.Cookie = "srcLang=ja; smru_list=ja; sourceDia=ja-JP; destLang=zh-CHS; dmru_list=da%2Czh-CHS; destDia=zh-CN; mtstkn=VMevFKwd2GA3IJImx3IABcN88KwOupEpPvEEITkPIro9r6Eftg4X%2FmYpju4hT30N; MUIDB=1E9EE98C4DE76D9E0DFCE08A49E76B60;"
+    HTTPHeaders.Cookie = "srcLang=ja; smru_list=ja; sourceDia=ja-JP; destLang=zh-CHS; dmru_list=da%2Czh-CHS; destDia=zh-CN; mtstkn=7G%2BO7dsHrux9Ni6uAeC6nbRe1%2B7cHYtQ91oH372MnGrX%2BSbGFksc%2BWyL4VTJN7pS; MUIDB=1E05DDCF9350664F260ED41B92F16765;"
 
     request.post("http://www.bing.com/translator/api/Translate/TranslateArray?from=ja&to=zh-CHS")
         .set(HTTPHeaders)

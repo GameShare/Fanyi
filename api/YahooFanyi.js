@@ -15,7 +15,7 @@ var yahoo = function(src, callback){
         "p" : src,
         "ieid" : "ja",
         "oeid" : "zh",
-        "_crumb" :　"LszhQXbmGoQafpTC0pRTJJHzrEZyHupnpSAJFT9lfMRUuzKjWN_X2ddRMWlm1p_FWiVjgE2OYrCWNSxbI2BTKe_53lcSgA--",
+        "_crumb" :　"jUt9LwW5yiVfSHcFZwq7eTRxRLuwiMCTw3kSHMVKQJQ.OMl7_HVWvl.RevAupMp2HbYnBmWekB0ejMFYTTwSKIlw_n5u4g--",
         "results" : "1000",
         "formality" : "0",
         "output" : "json"
