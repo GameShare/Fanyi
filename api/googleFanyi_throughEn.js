@@ -75,30 +75,15 @@ var google = function(src, A, B, callback){
     request.get("http://translate.google.cn/translate_a/single?client=t&sl=" + A + "&tl=" + B + "&hl=zh-CN&dt=at&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&ie=UTF-8&oe=UTF-8&source=btn&srcrom=1&ssel=0&tsel=0&kc=0" + Er(src) + "&q=" + encodeURIComponent(src))
         .set(HTTPHearders)
         .end(function(err, data){
-            try{
-                if(err) throw err;
-                return;
-            } catch (e) {
-                if(!e.rawResponse) callback(new Error("谷歌翻译 翻译失败! 可能原因是 TKK 过期!"))
+            var t = JSON.parse(data.text);
+            var text = "";
 
-                var text = "";
-
-                // 以下, 因为返回数据的天生缺陷, 所以只能使用这种调用正则匹配的方式进行译文匹配
-                var pattern = /\["(.+?)",/g;
-                var endPattern = /\[,,/g
-
-                var endMatch = endPattern.exec(e.rawResponse)
-
-                if(endMatch === null) callback(new Error("谷歌翻译 翻译失败! 原因未知!"))
-
-                while(true){
-                    var match = pattern.exec(e.rawResponse);
-                    if(match.index > endMatch.index) break;
-                    text += match[1];
-                }
-
-                callback(null, text)
+            for(let i = 0; i < t[0].length - 1; i++) {
+                text += t[0][i][0]
             }
+
+
+            callback(null, text)
             
         })
 }
@@ -123,7 +108,7 @@ var googleThroughEn = function (src, callback) {
 
 module.exports = googleThroughEn;
 
-// googleThroughEn("小悪魔発育チュ～！", function(err, data){
+// googleThroughEn("その少女の生い立ちは不幸そのものだった。殻に閉じこもる性格のせいで友だちなどいない。性格を治すために母に入れられた施設では、大人たちに虐待される日々。嫌なこと、痛いこと……。痛いこと、痛いこと、痛いこと、痛いこと。そして歪む運命。それが南沢泉理という少女だった。", function(err, data){
 //     if(err) throw err;
 //     console.log(data)
 // })

@@ -12,18 +12,18 @@ var yahoo = require("./api/YahooFanyi.js")
 
 var googleThroughEn = require("./api/googleFanyi_throughEn.js")
 
-var words = "主人公『大蔵遊星(おおくらゆうせい)』は、日本の財界を代表する“華麗なる一族”大蔵家の末端に、望まれぬ子として生を受けた。　優秀な親族や家庭教師のもとで厳しく育てられた遊星は、多芸に秀でた万能家であったが、いうなれば籠の中の鳥であり、およそ人並みの夢や希望などとは無縁の生涯だった。"
+var words = "10月24日の夜。あるマンションの3階で、常識ではありえない焼死体が発見された。被害者は10代から30代の女性。全裸でテーブルに乗せられており、丸焼き料理にでもされたみたいに、口から鉄骨を突き出した状態で消し炭にされていた。しかも被害者は拓留たちがよく知る人物で……。"
 
 getTranslation(words)
 
 function getTranslation(words){
     aciba(words, function(err, data){
-        if(err) throw err;  // aciba
+        if(err) console.error("爱词霸发生错误" + err);  // aciba
         console.log("Aciba : " + data);
     })
 
     baidu(words, function(err, data){
-        if(err) throw err;  // baidu
+        if(err) console.error("百度发生错误" + err);  // baidu
         console.log("Baidu : " + data);
     })
 
@@ -31,27 +31,27 @@ function getTranslation(words){
     // 而且其 cookie 有时间限制....
     // 不过就这翻译水平...也不值得专门研究 cookie 的生成方式
     bing(words, function(err, data){
-        if(err) throw err;  // bing
+        if(err) console.error("bing发生错误" + err);  // bing
         console.log("Bing : " + data);
     })
 
     youdao(words, function(err, data){
-        if(err) throw err;  // youdao
+        if(err) console.error("有道发生错误" + err);  // youdao
         console.log("Youdao : " + data);
     })
 
     google(words, function(err, data){
-        if(err) throw err;  // google
+        if(err) console.error("google发生错误" + err);  // google
         console.log("Google : " + data);
     })
 
-    yahoo(words, function(err, data){
-        if(err) throw err;  // yahoo
-        console.log("Yahoo : " + data);
-    })
+    // yahoo(words, function(err, data){
+    //     if(err) console.error("yahoo发生错误" + err);  // yahoo
+    //     console.log("Yahoo : " + data);
+    // })
 
     googleThroughEn(words, function(err, data){
-        if(err) throw err;  // yahoo
+        if(err) console.error("google2发生错误" + err);  // yahoo
         console.log("GoogleThroughEn : " + data);
     })
 }
